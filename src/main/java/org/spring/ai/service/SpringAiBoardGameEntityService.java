@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-@Service("SpringAiBoardGameService")
-public class SpringAiBoardGameService implements BoardGameService {
+@Service("SpringAiBoardGameEntityService")
+public class SpringAiBoardGameEntityService implements BoardGameService {
 
     @Value("classpath:/templates/questionPromptTemplate.st")
     Resource questionPromptTemplate;
@@ -20,27 +20,14 @@ public class SpringAiBoardGameService implements BoardGameService {
     private ChatClient chatClient;
     private GameRulesService gameRulesService;
 
-    public SpringAiBoardGameService(ChatClient.Builder chatClientBuilder, GameRulesService gameRulesService) {
+    public SpringAiBoardGameEntityService(ChatClient.Builder chatClientBuilder, GameRulesService gameRulesService) {
         this.chatClient = chatClientBuilder.build();
         this.gameRulesService = gameRulesService;
     }
 
     @Override
     public Answer askQuestion(Question question) {
-//        var promtTemplate = """
-//                 You are a helpful assistant, answering questions about tabletop games.
-//                    If you don't know anything about the game or don't know the answer,
-//                    say "I don't know".
-//                 Answer this question about {game}: {question}
-//                 """;
 
-
-//        var prompt = "Answer this question about " + question.gameTitle() + ": " + question.question();
-//        var answerText = chatClient.prompt().user(prompt).call().content();
-
-//        var answerText = chatClient.prompt().user(promptUserSpec -> promptUserSpec.text(questionPromptTemplate)
-//                        .param("gameTitle", question.gameTitle()).param("question", question.question()).param("rules", gameRulesService.getRulesFor(question.gameTitle())))
-//                .call().content();
 
         // using the prompt template for system message and user message
         var gameRules = gameRulesService.getRulesFor(question.gameTitle());
@@ -50,9 +37,9 @@ public class SpringAiBoardGameService implements BoardGameService {
                         .param("gameTitle", question.gameTitle()).param("rules", gameRules))
                 .user(promptUserSpec -> promptUserSpec.text(question.question()))
                 .options(chatOptions)
-                .call().content();
+                .call().entity(Answer.class);
 
-        return new Answer(question.gameTitle(), answerText);
+        return answerText;
 
     }
 

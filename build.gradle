@@ -29,8 +29,9 @@ dependencies {
     implementation 'org.springframework.ai:spring-ai-starter-model-ollama'
 //    implementation 'org.springframework.ai:spring-ai-starter-model-google-genai'
     // Source: https://mvnrepository.com/artifact/org.springframework.retry/spring-retry
-    implementation("org.springframework.retry:spring-retry:2.0.12")
+    implementation 'org.springframework.retry:spring-retry:+'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.zalando:logbook-spring-boot-starter:+'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -41,6 +42,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.wiremock.integrations:wiremock-spring-boot:3.9.0'
+
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.21.4")
 }
 
 dependencyManagement {
