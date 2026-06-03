@@ -17,15 +17,18 @@ import java.util.function.Function;
 
 public class GameRulesLoaderApplication {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameRulesLoaderApplication.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(GameRulesLoaderApplication.class);
 
-    @Value("classpath:/promptTemplates/naameOfTheGame.st")
+    @Value("classpath:/promptTemplates/nameOfTheGame.st")
     Resource nameOfTheGameTemplateResource;
 
     @Bean
-    Function<Flux<List<Document>>, Flux<List<Document>>> titleDeterminer(ChatClient.Builder chatClientBuilder) {
+    Function<Flux<List<Document>>, Flux<List<Document>>>
+    titleDeterminer(ChatClient.Builder chatClientBuilder) {
 
         var chatClient = chatClientBuilder.build();
+
         return documentListFlux -> documentListFlux
                 .map(documents -> {
                     if (!documents.isEmpty()) {
@@ -54,7 +57,6 @@ public class GameRulesLoaderApplication {
 
                     return documents;
                 });
-
     }
 
 
