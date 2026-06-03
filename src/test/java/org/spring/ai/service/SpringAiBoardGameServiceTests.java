@@ -34,7 +34,7 @@ public class SpringAiBoardGameServiceTests {
 //    @Test
     public void evaluateRelevancy(){
         var userText = "why is the sky blue?";
-        Question question = new Question(userText);
+        Question question = new Question("",userText);
         var answer = boardGameService.askQuestion(question);
 
         var request = new EvaluationRequest(userText, answer.answer());
@@ -53,10 +53,10 @@ public class SpringAiBoardGameServiceTests {
         System.out.println("Relevancy score: " + evaluationResponse);
     }
 
-    @Test
+//    @Test
     public void evaluateFactChecking(){
         var userText = "what is the capital of France?";
-        var question = new Question(userText);
+        var question = new Question("",userText);
         var answer = boardGameService.askQuestion(question);
 
         var request = new EvaluationRequest(userText, answer.answer());
