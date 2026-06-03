@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.6'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'org.spring.ai'
+version = '0.0.1-SNAPSHOT'
+description = 'Spring-RAG'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(26)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+
+        springCloudVersion = '2025.1.1'
+        springFunctionsCatalogVersion = '6.0.0'
+        springAiVersion = "2.0.0-M8"
+
+}
+
+dependencyManagement {
+    imports {
+
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "org.springframework.cloud.fn:spring-functions-catalog-bom:${springFunctionsCatalogVersion}"
+    }
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.ai:spring-ai-advisors-vector-store'
+    implementation 'org.springframework.ai:spring-ai-starter-model-ollama'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-qdrant'
+    implementation 'org.springframework.ai:spring-ai-tika-document-reader'
+    implementation 'org.springframework.cloud:spring-cloud-function-web'
+
+    implementation 'org.springframework.cloud.fn:spring-file-supplier'
+
+    implementation 'org.springframework.boot:spring-boot-docker-compose'
+    implementation 'org.springframework.ai:spring-ai-spring-boot-docker-compose'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
