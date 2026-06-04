@@ -1,5 +1,6 @@
 package org.spring.ai.springrag.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.ai.springrag.model.GameTitle;
@@ -10,11 +11,13 @@ import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.restclient.RestClientCustomizer;
 import org.springframework.cloud.function.context.FunctionCatalog;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.zalando.logbook.spring.LogbookClientHttpRequestInterceptor;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
@@ -28,6 +31,17 @@ import java.util.function.Function;
 public class SpringRagConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringRagConfiguration.class);
+
+
+    @Bean
+    public RestClientCustomizer logbookCustomizer(LogbookClientHttpRequestInterceptor logbookClientHttpRequestInterceptor){
+        return restClient -> restClient.requestInterceptor(logbookClientHttpRequestInterceptor);
+    }
+
+    @Bean
+    public ObjectMapper objectMapper(){
+        return new ObjectMapper();
+    }
 
     @Bean
     ApplicationRunner go(FunctionCatalog catalog) {
@@ -53,7 +67,7 @@ public class SpringRagConfiguration {
 
     @Bean
     Function<Flux<Document>, Flux<List<Document>>> splitter() {
-        var splitter =  TokenTextSplitter.builder().build();
+        var splitter =  TokenTextSplitter.builder().withChunkSize(1000).withMinChunkSizeChars(500).build();
         return documentFlux ->
                 documentFlux
                         .map(incoming -> splitter
